@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>森葉花坊 SenYeh Present｜蝴蝶蘭・室內植栽專賣</title>
+  <!-- 引入 Tailwind CSS 框架 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入 Google Fonts 字體 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+  <!-- 引入 FontAwesome 圖示庫 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            forest: { DEFAULT: '#2C4A3E', light: '#3E6556', dark: '#1E332B' },
+            sage: { DEFAULT: '#6B8E78', light: '#8FA998' },
+            wood: { DEFAULT: '#C89D7C', light: '#E3C3A8', dark: '#A47958' },
+            cream: { DEFAULT: '#FAF8F5', card: '#FFFFFF', subtle: '#F1EDE6' }
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
+            serif: ['Noto Serif TC', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'Inter', 'Noto Sans TC', sans-serif; transition: background-color 0.3s ease, color 0.3s ease; }
+    .serif-title { font-family: 'Noto Serif TC', serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+  </style>
+</head>
+
+<body class="bg-cream text-stone-800 dark:bg-stone-900 dark:text-stone-100 min-h-screen flex flex-col selection:bg-forest selection:text-white">
+
+  <!-- 店主專屬管理狀態列 -->
+  <div id="owner-admin-bar" class="hidden bg-stone-900 text-amber-200 text-xs sm:text-sm py-2 px-4 border-b border-wood/40 sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+      <div class="flex items-center space-x-2">
+        <span class="px-2 py-0.5 rounded bg-wood text-white font-bold text-xs"><i class="fa-solid fa-user-shield"></i> 店主管理中</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <button onclick="switchMainView('admin')" class="px-3 py-1 rounded bg-forest text-white font-semibold text-xs">後台與上架</button>
+        <button onclick="switchMainView('storefront')" class="px-3 py-1 rounded bg-stone-800 text-stone-200 text-xs">預覽前台</button>
+        <button onclick="handleAdminLogout()" class="px-3 py-1 rounded bg-rose-700 text-white font-semibold text-xs">登出</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 頂部營業與聯絡條 -->
+  <div class="bg-forest text-cream text-xs py-2 px-4">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div id="top-store-status-badge" class="font-medium">載入營業狀態...</div>
+      <div><i class="fa-solid fa-location-dot mr-1"></i>彰化縣社頭鄉舊社村社斗路一段37號 ｜ 電話：04-871-2822</div>
+    </div>
+  </div>
+
+  <!-- 導覽列 -->
+  <header class="sticky top-0 z-40 bg-cream/95 dark:bg-stone-900/95 backdrop-blur-md border-b border-stone-200 dark:border-stone-800 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <a href="#" onclick="switchMainView('storefront'); return false;" class="flex items-center space-x-3 group">
+        <div class="w-12 h-12 rounded-full bg-[#425E3B] flex items-center justify-center shadow overflow-hidden shrink-0">
+          <svg viewBox="0 0 200 200" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="98" fill="#425E3B" stroke="#E5E9E2" stroke-width="2" />
+            <circle cx="100" cy="100" r="87" fill="none" stroke="#FFFFFF" stroke-width="5.5" />
+            <g fill="none" stroke="#FFFFFF" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M 70 67 L 54 79 C 52 81 78 74 79 77 C 80 80 51 89 53 92 C 55 95 81 86 82 89 C 83 92 49 101 51 103 L 84 102" />
+              <path d="M 69 103 L 68 111" />
+              <path d="M 55 112 L 42 122 C 40 124 63 118 64 121 C 65 124 39 132 41 135 C 43 138 66 129 67 132 C 68 135 38 143 40 145 L 69 144" />
+              <path d="M 55 145 L 54 155" />
+              <path d="M 82 113 L 69 123 C 67 125 90 119 91 122 C 92 125 66 133 68 136 C 70 139 93 130 94 133 C 95 136 66 144 68 146 L 97 145" />
+              <path d="M 85 146 L 84 161" />
+            </g>
+            <text x="129" y="103" fill="#FFFFFF" font-family="'Noto Serif TC', serif" font-weight="900" font-size="37" letter-spacing="3" text-anchor="middle">森葉</text>
+            <text x="131" y="128" fill="#FFFFFF" font-family="Georgia, serif" font-weight="500" font-size="18.5" text-anchor="middle">Senyeh</text>
+            <path d="M 96 136 Q 116 135 129 149 Q 142 135 164 136" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="serif-title text-xl font-bold text-forest dark:text-sage-light">森葉花坊</h1>
+          <p class="text-[11px] text-stone-500">蝴蝶蘭・植栽・客製化</p>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center space-x-2 text-sm font-medium">
+        <button onclick="navigateToSection('products-section')" class="px-3 py-2 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800">花禮選單</button>
+        <button onclick="navigateToSection('services-section')" class="px-3 py-2 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800">服務項目</button>
+        <button onclick="navigateToSection('store-info-section')" class="px-3 py-2 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800">門市資訊</button>
+      </nav>
+
+      <div class="flex items-center space-x-2">
+        <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300">
+          <i id="theme-icon" class="fa-solid fa-moon text-sm"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主視圖 A：前台 -->
+  <main id="storefront-view" class="flex-grow">
+
+    <!-- 簡潔 Banner -->
+    <section class="bg-gradient-to-b from-cream-subtle to-cream dark:from-stone-900 dark:to-stone-950 py-10 px-4 text-center">
+      <div class="max-w-3xl mx-auto space-y-3">
+        <span class="px-3 py-1 rounded-full bg-forest/10 text-forest dark:text-sage-light text-xs font-semibold">彰化社頭實體花坊</span>
+        <h2 class="serif-title text-3xl font-bold">精選蝴蝶蘭與植栽・專人客製服務</h2>
+        <p class="text-stone-600 dark:text-stone-300 text-sm max-w-xl mx-auto">
+          提供開幕誌慶、喬遷、婚宴、追思等花禮。所有商品均可點擊下方按鈕進行客製化與加 LINE 詢價。
+        </p>
+      </div>
+    </section>
+
+    <!-- 商品情境選單 (Menu) -->
+    <section id="products-section" class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+        <div>
+          <h3 class="serif-title text-2xl font-bold">花藝植栽選單 (Menu)</h3>
+          <p class="text-xs text-stone-500 mt-1">請依照送禮場合選取分類，點擊「客製與細節」進行花色與賀卡配置</p>
+        </div>
+        <div class="relative w-full md:w-64">
+          <input id="search-input" type="text" oninput="handleSearch()" placeholder="搜尋花禮..." class="w-full pl-8 pr-3 py-2 rounded-xl bg-stone-100 dark:bg-stone-800 text-xs border border-stone-200 dark:border-stone-700 focus:outline-none" />
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
+        </div>
+      </div>
+
+      <!-- 分類按鈕列 -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-6">
+        <button onclick="setCategory('all')" data-cat="all" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-forest text-white">全部花禮</button>
+        <button onclick="setCategory('喜慶開幕/喬遷')" data-cat="喜慶開幕/喬遷" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-200">喜慶開幕 / 喬遷</button>
+        <button onclick="setCategory('婚宴/榮任祝賀')" data-cat="婚宴/榮任祝賀" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-200">婚宴 / 榮任祝賀</button>
+        <button onclick="setCategory('追思弔唁蘭花')" data-cat="追思弔唁蘭花" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-200">追思弔唁蘭花</button>
+        <button onclick="setCategory('聖誕節慶/療癒植栽')" data-cat="聖誕節慶/療癒植栽" class="cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-200">聖誕節慶 / 療癒植栽</button>
+      </div>
+
+      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- 服務項目簡要 -->
+    <section id="services-section" class="py-12 bg-white dark:bg-stone-800/50 border-y border-stone-200 dark:border-stone-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h3 class="serif-title text-2xl font-bold mb-6 text-center">服務項目</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+          <div class="p-4 rounded-2xl bg-cream dark:bg-stone-800 border">
+            <div class="font-bold text-sm mb-1 text-forest">蝴蝶蘭組盆</div>
+            <p class="text-stone-500">提供 A 級大白花、紫紅花與特選蘭株，適合各類祝賀。</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-cream dark:bg-stone-800 border">
+            <div class="font-bold text-sm mb-1 text-forest">室內觀葉植栽</div>
+            <p class="text-stone-500">龜背芋、虎尾蘭、琴葉榕等，為空間增添綠意。</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-cream dark:bg-stone-800 border">
+            <div class="font-bold text-sm mb-1 text-forest">祝賀花卡設計</div>
+            <p class="text-stone-500">免費附贈直書賀卡，提供四大字與上下款排版。</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-cream dark:bg-stone-800 border">
+            <div class="font-bold text-sm mb-1 text-forest">專人外送自取</div>
+            <p class="text-stone-500">彰化及鄰近地區專車配送，歡迎門市參觀選購。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 門市資訊 -->
+    <section id="store-info-section" class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white dark:bg-stone-800 rounded-3xl p-6 sm:p-8 border shadow-sm">
+        <h3 class="serif-title text-xl font-bold mb-4">門市資訊</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs sm:text-sm">
+          <div class="space-y-2">
+            <div><i class="fa-solid fa-location-dot text-forest mr-2"></i>彰化縣社頭鄉舊社村社斗路一段37號</div>
+            <div><i class="fa-solid fa-phone text-forest mr-2"></i>04-871-2822</div>
+            <div id="store-hours-text"><i class="fa-solid fa-clock text-forest mr-2"></i>營業時間計算中...</div>
+          </div>
+          <div class="flex items-center gap-3">
+            <a href="https://lin.ee/RmI40FH" target="_blank" rel="noopener noreferrer" class="flex-1 py-3 px-4 rounded-xl bg-[#06C755] text-white font-bold text-center flex items-center justify-center gap-1.5 shadow">
+              <i class="fa-brands fa-line text-base"></i><span>加入官方 LINE</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 店主後台視圖 -->
+  <section id="admin-view" class="hidden flex-grow py-10 max-w-7xl mx-auto px-4 w-full">
+    <div class="flex items-center justify-between pb-6 border-b mb-6">
+      <h3 class="serif-title text-xl font-bold">店主商品管理</h3>
+      <div class="flex gap-2">
+        <button onclick="switchMainView('storefront')" class="px-3 py-1.5 bg-forest text-white rounded-xl text-xs font-semibold">回前台</button>
+        <button onclick="handleAdminLogout()" class="px-3 py-1.5 bg-rose-600 text-white rounded-xl text-xs font-semibold">登出</button>
+      </div>
+    </div>
+
+    <!-- 商品表單 (新增 / 編輯) -->
+    <div class="bg-white dark:bg-stone-800 rounded-3xl p-6 border shadow-sm mb-8">
+      <h4 id="form-title" class="font-bold text-sm mb-4">新增商品</h4>
+      <form id="admin-form" onsubmit="handleSaveProduct(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="edit-id" />
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <input id="p-name" type="text" required placeholder="商品名稱" class="p-2.5 rounded-xl border bg-stone-50 dark:bg-stone-900 sm:col-span-2" />
+          <select id="p-cat" class="p-2.5 rounded-xl border bg-stone-50 dark:bg-stone-900">
+            <option value="喜慶開幕/喬遷">喜慶開幕 / 喬遷</option>
+            <option value="婚宴/榮任祝賀">婚宴 / 榮任祝賀</option>
+            <option value="追思弔唁蘭花">追思弔唁蘭花</option>
+            <option value="聖誕節慶/療癒植栽">聖誕節慶 / 療癒植栽</option>
+          </select>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class="sm:col-span-2">
+            <label class="block font-semibold mb-1">商品圖片（可選擇圖片檔案或輸入網址）</label>
+            <div class="flex gap-2 items-center">
+              <input id="p-img-file" type="file" accept="image/*" onchange="handleImageFileSelect(event)" class="p-2 rounded-xl border bg-stone-50 dark:bg-stone-900 flex-1 text-xs" />
+              <input id="p-img" type="text" placeholder="或貼上圖片網址 (URL)" class="p-2.5 rounded-xl border bg-stone-50 dark:bg-stone-900 flex-1" />
+            </div>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">排序權重 (數字越小越前面)</label>
+            <input id="p-order" type="number" value="0" class="w-full p-2.5 rounded-xl border bg-stone-50 dark:bg-stone-900" />
+          </div>
+        </div>
+
+        <div id="img-preview-container" class="mt-2 hidden">
+          <img id="img-preview" src="" alt="預覽圖" class="w-20 h-20 object-cover rounded-xl border" />
+        </div>
+
+        <input id="p-desc" type="text" placeholder="簡短描述" class="w-full p-2.5 rounded-xl border bg-stone-50 dark:bg-stone-900" />
+        
+        <div class="flex gap-2">
+          <button type="submit" id="submit-btn" class="flex-1 py-2.5 bg-forest text-white rounded-xl font-bold">儲存新增商品</button>
+          <button type="button" id="cancel-edit-btn" onclick="resetAdminForm()" class="hidden px-4 py-2.5 bg-stone-300 dark:bg-stone-700 rounded-xl font-bold">取消編輯</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 現有商品列表管理 -->
+    <div class="bg-white dark:bg-stone-800 rounded-3xl p-6 border shadow-sm">
+      <h4 class="font-bold text-sm mb-4">現有商品列表管理</h4>
+      <div id="admin-products-list" class="space-y-3"></div>
+    </div>
+  </section>
+
+  <!-- 頁尾 -->
+  <footer class="bg-stone-900 text-stone-400 py-6 text-center text-xs mt-12 border-t border-stone-800">
+    <p onclick="handleSecretClick()" class="cursor-pointer select-none">© 森葉花坊 SenYeh Present. All Rights Reserved.</p>
+  </footer>
+
+  <!-- 員工登入 Modal -->
+  <div id="login-modal" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-stone-900 rounded-3xl max-w-xs w-full p-6 border shadow-xl space-y-4">
+      <h3 class="font-bold text-sm">店主登入</h3>
+      <form onsubmit="handleLoginSubmit(event)" class="space-y-3 text-xs">
+        <input id="l-user" type="text" placeholder="帳號" required class="w-full p-2 rounded-xl border" />
+        <input id="l-pass" type="password" placeholder="密碼" required class="w-full p-2 rounded-xl border" />
+        <button type="submit" class="w-full py-2 bg-forest text-white rounded-xl font-bold">登入</button>
+        <button type="button" onclick="closeLoginModal()" class="w-full py-1 text-stone-400">取消</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 客製化與細節彈窗 -->
+  <div id="custom-modal" class="fixed inset-0 z-50 hidden bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-stone-900 rounded-3xl max-w-md w-full p-6 border shadow-2xl space-y-4 animate-fade-in max-h-[90vh] overflow-y-auto text-xs">
+      <div class="flex items-center justify-between pb-3 border-b">
+        <h3 id="modal-title" class="font-bold text-sm">商品客製與細節</h3>
+        <button onclick="closeCustomModal()" class="w-6 h-6 rounded-full bg-stone-100 dark:bg-stone-800 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="space-y-3">
+        <div>
+          <label class="block font-bold mb-1">1. 選擇花株數量 (幾株花)</label>
+          <select id="m-stems" onchange="toggleCustomStems()" class="w-full p-2 rounded-xl border bg-stone-50 dark:bg-stone-800">
+            <option value="單株精緻盆">單株精緻盆</option>
+            <option value="雙株對稱盆">雙株對稱盆</option>
+            <option value="三株大方盆">三株大方盆</option>
+            <option value="五株氣派盆（開幕首選）">五株氣派盆（開幕首選）</option>
+            <option value="六株 / 多株豐盛大盆">六株 / 多株豐盛大盆</option>
+            <option value="custom">其他 (自定義輸入)</option>
+          </select>
+          <input id="m-stems-custom" type="text" placeholder="請輸入想要的株數或規格..." class="hidden w-full mt-2 p-2 rounded-xl border bg-stone-50 dark:bg-stone-800" />
+        </div>
+
+        <div>
+          <label class="block font-bold mb-1">2. 選擇花色</label>
+          <select id="m-color" onchange="toggleCustomColor()" class="w-full p-2 rounded-xl border bg-stone-50 dark:bg-stone-800">
+            <option value="皇家大白花">皇家大白花</option>
+            <option value="富貴紫紅花">富貴紫紅花</option>
+            <option value="溫馨香檳粉">溫馨香檳粉</option>
+            <option value="黃金亮麗雙色">黃金亮麗雙色</option>
+            <option value="custom">其他 (自定義輸入)</option>
+          </select>
+          <input id="m-color-custom" type="text" placeholder="請輸入想要的花色..." class="hidden w-full mt-2 p-2 rounded-xl border bg-stone-50 dark:bg-stone-800" />
+        </div>
+
+        <div>
+          <label class="block font-bold mb-1">3. 擠花風格 / 擠珠花選項</label>
+          <select id="m-squeeze-style" class="w-full p-2 rounded-xl border bg-stone-50 dark:bg-stone-800">
+            <option value="標準自然擠花造型">標準自然擠花造型</option>
+            <option value="特色立體擠珠花造型">特色立體「擠珠花」造型</option>
+            <option value="精緻層次瀑布擠花">精緻層次瀑布擠花</option>
+            <option value="簡約俐落單面擠花">簡約俐落單面擠花</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold mb-1">4. 盆器與配件</label>
+          <select id="m-pot" class="w-full p-2 rounded-xl border bg-stone-50 dark:bg-stone-800">
+            <option value="經典描金白瓷盆">經典描金白瓷盆</option>
+            <option value="喜慶高質感紅瓷盆">喜慶高質感紅瓷盆</option>
+            <option value="質樸北歐水泥盆">質樸北歐水泥盆</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold mb-1">5. 是否需要祝賀卡</label>
+          <select id="m-need-card" onchange="toggleCardFields()" class="w-full p-2 rounded-xl border bg-stone-50 dark:bg-stone-800">
+            <option value="no">不需要賀卡</option>
+            <option value="yes">需要賀卡</option>
+          </select>
+        </div>
+
+        <div id="card-detail-section" class="hidden space-y-3 p-3 rounded-xl bg-stone-50 dark:bg-stone-800/50 border">
+          <div>
+            <label class="block font-bold mb-1">送禮場合與祝賀詞</label>
+            <select id="m-occasion" onchange="updateModalOccasion()" class="w-full p-2 rounded-xl border bg-stone-50 dark:bg-stone-800">
+              <option value="opening">喜慶開幕 (鴻圖大展)</option>
+              <option value="housewarming">喬遷之喜 (喬遷誌慶)</option>
+              <option value="wedding">婚宴喜慶 (百年好合)</option>
+              <option value="condolence">追思弔唁 (哲人其萎)</option>
+            </select>
+            <input id="m-greeting" type="text" value="鴻圖大展" class="w-full mt-2 p-2 rounded-xl border bg-stone-50 dark:bg-stone-800 font-bold" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] font-semibold mb-1">上款 (被送禮人)</label>
+              <input id="m-recipient" type="text" placeholder="例如：貴賓 誌慶" value="貴賓 誌慶" class="w-full p-2 rounded-xl border bg-stone-50 dark:bg-stone-800" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold mb-1">下款 (送禮人署名)</label>
+              <input id="m-sender" type="text" placeholder="例如：好友 敬賀" value="好友 敬賀" class="w-full p-2 rounded-xl border bg-stone-50 dark:bg-stone-800" />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold mb-1">6. 自訂客製化需求輸入 (選填)</label>
+          <input id="m-custom-input" type="text" placeholder="例如：想要加多一點金色裝飾或特定配飾..." class="w-full p-2 rounded-xl border bg-stone-50 dark:bg-stone-800" />
+        </div>
+
+        <div>
+          <label class="block font-bold mb-1">7. 其他備註細節說明</label>
+          <textarea id="m-note" rows="2" placeholder="例如：希望緞帶用紅色、下午送到..." class="w-full p-2 rounded-xl border bg-stone-50 dark:bg-stone-800"></textarea>
+        </div>
+
+        <button onclick="confirmAndSendLine()" class="w-full py-3 bg-[#06C755] text-white font-bold rounded-xl flex items-center justify-center gap-1.5 shadow">
+          <i class="fa-brands fa-line text-base"></i><span>確認規格並加 LINE 說明細節</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+  <script>
+    const defaultProducts = [
+      { id: 1, name: "雙梗大白蝴蝶蘭・描金白瓷盆", category: "喜慶開幕/喬遷", image: "https://images.unsplash.com/photo-1566873535350-a3f5d4a804b7?auto=format&fit=crop&w=800&q=80", desc: "高雅大方，新店開幕首選。", order: 1 },
+      { id: 2, name: "紫紅五株蝴蝶蘭・喜慶盆", category: "喜慶開幕/喬遷", image: "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=800&q=80", desc: "飽滿豔麗，象徵鴻圖大展。", order: 2 },
+      { id: 3, name: "雙色蝴蝶蘭・婚宴盆", category: "婚宴/榮任祝賀", image: "https://images.unsplash.com/photo-1509423350716-97f9360b4e09?auto=format&fit=crop&w=800&q=80", desc: "浪漫典雅，百年好合。", order: 3 },
+      { id: 4, name: "素雅白蝴蝶蘭・追思致意盆", category: "追思弔唁蘭花", image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80", desc: "莊嚴肅穆，無限追思。", order: 4 },
+      { id: 5, name: "聖誕童話・迷你療癒盆", category: "聖誕節慶/療癒植栽", image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=800&q=80", desc: "節慶限定，交換禮物推薦。", order: 5 },
+      { id: 6, name: "北歐風龜背芋・水泥盆", category: "聖誕節慶/療癒植栽", image: "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=800&q=80", desc: "自然裂葉，居家質感綠化。", order: 6 }
+    ];
+
+    let products = JSON.parse(localStorage.getItem("senyeh_simple_products")) || defaultProducts;
+    products.forEach((p, idx) => { if (p.order === undefined) p.order = idx + 1; });
+
+    let currentCat = "all";
+    let activeProduct = null;
+    let isAdmin = sessionStorage.getItem("senyeh_admin") === "true";
+    let tempUploadedImage = "";
+
+    window.addEventListener("DOMContentLoaded", () => {
+      renderProducts();
+      updateAdminState();
+      updateStoreStatus();
+    });
+
+    function updateAdminState() {
+      const adminBar = document.getElementById("owner-admin-bar");
+      if (adminBar) {
+        if (isAdmin) {
+          adminBar.classList.remove("hidden");
+        } else {
+          adminBar.classList.add("hidden");
+        }
+      }
+    }
+
+    function updateStoreStatus() {
+      const badge = document.getElementById("top-store-status-badge");
+      const hoursText = document.getElementById("store-hours-text");
+      
+      const now = new Date();
+      const day = now.getDay();
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+      const timeVal = hour * 60 + minute;
+
+      let isOpen = false;
+      let hoursString = "週二至五 09:00-17:30 ｜ 週六至 16:00 ｜ 週日至 12:00（週一公休）";
+
+      if (day === 1) {
+        isOpen = false;
+      } else if (day >= 2 && day <= 5) {
+        if (timeVal >= 540 && timeVal <= 1050) isOpen = true;
+      } else if (day === 6) {
+        if (timeVal >= 540 && timeVal <= 960) isOpen = true;
+      } else if (day === 0) {
+        if (timeVal >= 540 && timeVal <= 720) isOpen = true;
+      }
+
+      if (badge) {
+        badge.innerHTML = isOpen ? '🟢 森葉花坊營業中 (04-871-2822)' : '🔴 目前休息中（歡迎加 LINE 留言詢問）';
+      }
+      if (hoursText) {
+        hoursText.innerHTML = `<i class="fa-solid fa-clock text-forest mr-2"></i>${hoursString}`;
+      }
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById("products-grid");
+      const keyword = (document.getElementById("search-input")?.value || "").trim().toLowerCase();
+
+      // 依照 order 排序（前台卡片乾淨不顯示多餘標籤）
+      const sortedProducts = [...products].sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+
+      const filtered = sortedProducts.filter(p => {
+        const matchCat = currentCat === "all" || p.category === currentCat;
+        const matchKey = !keyword || p.name.toLowerCase().includes(keyword);
+        return matchCat && matchKey;
+      });
+
+      if (grid) {
+        if (filtered.length === 0) {
+          grid.innerHTML = `<div class="col-span-full py-12 text-center text-stone-400 text-xs">沒有找到符合的花禮</div>`;
+        } else {
+          grid.innerHTML = filtered.map(p => `
+            <div class="bg-white dark:bg-stone-800 rounded-2xl overflow-hidden border shadow-sm flex flex-col justify-between">
+              <div>
+                <div class="aspect-square overflow-hidden bg-stone-100 relative">
+                  <img src="${p.image}" class="w-full h-full object-cover hover:scale-105 transition" onerror="this.src='https://placehold.co/400x400/2C4A3E/FAF8F5?text=SenYeh'" />
+                </div>
+                <div class="p-4 space-y-1">
+                  <span class="text-[10px] text-forest font-semibold">${p.category}</span>
+                  <h4 class="font-bold text-sm">${p.name}</h4>
+                  <p class="text-xs text-stone-500 line-clamp-1">${p.desc}</p>
+                </div>
+              </div>
+              <div class="p-4 pt-0">
+                <button onclick="openCustomModal(${p.id})" class="w-full py-2.5 rounded-xl bg-forest text-white text-xs font-bold hover:bg-forest-light transition flex items-center justify-center gap-1.5 shadow">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i><span>客製化與細節 (加 LINE)</span>
+                </button>
+              </div>
+            </div>
+          `).join("");
+        }
+      }
+
+      renderAdminProductsList();
+    }
+
+    function renderAdminProductsList() {
+      const listContainer = document.getElementById("admin-products-list");
+      if (!listContainer) return;
+
+      const sortedProducts = [...products].sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+
+      if (sortedProducts.length === 0) {
+        listContainer.innerHTML = `<p class="text-stone-400 text-xs">目前沒有商品</p>`;
+        return;
+      }
+
+      listContainer.innerHTML = sortedProducts.map(p => `
+        <div class="flex items-center justify-between p-3 rounded-2xl bg-stone-50 dark:bg-stone-900 border gap-3">
+          <div class="flex items-center space-x-3 overflow-hidden">
+            <img src="${p.image}" class="w-12 h-12 object-cover rounded-xl shrink-0" onerror="this.src='https://placehold.co/100x100/2C4A3E/FAF8F5?text=SenYeh'" />
+            <div class="truncate">
+              <div class="flex items-center gap-2">
+                <span class="px-1.5 py-0.5 bg-forest/10 text-forest text-[10px] rounded font-bold">排序: ${p.order || 0}</span>
+                <span class="text-[10px] text-forest font-semibold">${p.category}</span>
+              </div>
+              <h5 class="font-bold text-xs truncate">${p.name}</h5>
+              <p class="text-[11px] text-stone-500 truncate">${p.desc}</p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2 shrink-0">
+            <button type="button" onclick="startEditProduct(${p.id})" class="px-3 py-1.5 rounded-xl bg-amber-500 text-white font-bold text-xs"><i class="fa-solid fa-pen"></i> 修改</button>
+            <button type="button" onclick="handleDeleteProduct(${p.id})" class="px-3 py-1.5 rounded-xl bg-rose-600 text-white font-bold text-xs"><i class="fa-solid fa-trash"></i> 刪除</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function handleImageFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        tempUploadedImage = event.target.result;
+        document.getElementById("p-img").value = tempUploadedImage;
+        const preview = document.getElementById("img-preview");
+        if (preview) {
+          preview.src = tempUploadedImage;
+          document.getElementById("img-preview-container").classList.remove("hidden");
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function startEditProduct(id) {
+      const p = products.find(item => Number(item.id) === Number(id));
+      if (!p) return;
+      document.getElementById("edit-id").value = p.id;
+      document.getElementById("p-name").value = p.name;
+      document.getElementById("p-cat").value = p.category;
+      document.getElementById("p-img").value = p.image;
+      document.getElementById("p-desc").value = p.desc;
+      document.getElementById("p-order").value = p.order !== undefined ? p.order : 0;
+      document.getElementById("form-title").textContent = "修改商品";
+      document.getElementById("submit-btn").textContent = "確認更新商品";
+      document.getElementById("cancel-edit-btn").classList.remove("hidden");
+      
+      if (p.image) {
+        const preview = document.getElementById("img-preview");
+        if (preview) {
+          preview.src = p.image;
+          document.getElementById("img-preview-container").classList.remove("hidden");
+        }
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetAdminForm() {
+      const form = document.getElementById("admin-form");
+      if (form) form.reset();
+      document.getElementById("edit-id").value = "";
+      document.getElementById("p-order").value = "0";
+      document.getElementById("form-title").textContent = "新增商品";
+      document.getElementById("submit-btn").textContent = "儲存新增商品";
+      document.getElementById("cancel-edit-btn").classList.add("hidden");
+      document.getElementById("img-preview-container").classList.add("hidden");
+      tempUploadedImage = "";
+    }
+
+    function handleDeleteProduct(id) {
+      if (confirm("確定要刪除這項商品嗎？")) {
+        products = products.filter(item => Number(item.id) !== Number(id));
+        localStorage.setItem("senyeh_simple_products", JSON.stringify(products));
+        renderProducts();
+        showToast("已成功刪除商品");
+      }
+    }
+
+    function handleSaveProduct(e) {
+      e.preventDefault();
+      const editId = document.getElementById("edit-id").value;
+      const name = document.getElementById("p-name").value;
+      const category = document.getElementById("p-cat").value;
+      const image = document.getElementById("p-img").value || tempUploadedImage || "https://images.unsplash.com/photo-1566873535350-a3f5d4a804b7?auto=format&fit=crop&w=800&q=80";
+      const desc = document.getElementById("p-desc").value;
+      const order = Number(document.getElementById("p-order").value) || 0;
+
+      if (editId) {
+        const idx = products.findIndex(p => Number(p.id) === Number(editId));
+        if (idx !== -1) {
+          products[idx] = { id: Number(editId), name, category, image, desc, order };
+          showToast("商品修改成功");
+        }
+      } else {
+        const newProd = {
+          id: Date.now(),
+          name,
+          category,
+          image,
+          desc,
+          order
+        };
+        products.unshift(newProd);
+        showToast("商品新增成功");
+      }
+
+      localStorage.setItem("senyeh_simple_products", JSON.stringify(products));
+      resetAdminForm();
+      renderProducts();
+    }
+
+    function setCategory(cat) {
+      currentCat = cat;
+      document.querySelectorAll(".cat-btn").forEach(btn => {
+        if (btn.getAttribute("data-cat") === cat) {
+          btn.className = "cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-forest text-white";
+        } else {
+          btn.className = "cat-btn px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-200";
+        }
+      });
+      renderProducts();
+    }
+
+    function handleSearch() { renderProducts(); }
+
+    function openCustomModal(id) {
+      activeProduct = products.find(p => Number(p.id) === Number(id));
+      if (!activeProduct) return;
+      document.getElementById("modal-title").textContent = `客製化細節：${activeProduct.name}`;
+      
+      document.getElementById("m-stems").value = "單株精緻盆";
+      document.getElementById("m-stems-custom").classList.add("hidden");
+      document.getElementById("m-stems-custom").value = "";
+
+      document.getElementById("m-color").value = "皇家大白花";
+      document.getElementById("m-color-custom").classList.add("hidden");
+      document.getElementById("m-color-custom").value = "";
+
+      document.getElementById("m-need-card").value = "no";
+      document.getElementById("card-detail-section").classList.add("hidden");
+      
+      document.getElementById("custom-modal").classList.remove("hidden");
+    }
+
+    function toggleCustomStems() {
+      const val = document.getElementById("m-stems").value;
+      const customInput = document.getElementById("m-stems-custom");
+      if (val === "custom") {
+        customInput.classList.remove("hidden");
+        customInput.focus();
+      } else {
+        customInput.classList.add("hidden");
+      }
+    }
+
+    function toggleCustomColor() {
+      const val = document.getElementById("m-color").value;
+      const customInput = document.getElementById("m-color-custom");
+      if (val === "custom") {
+        customInput.classList.remove("hidden");
+        customInput.focus();
+      } else {
+        customInput.classList.add("hidden");
+      }
+    }
+
+    function toggleCardFields() {
+      const val = document.getElementById("m-need-card").value;
+      const section = document.getElementById("card-detail-section");
+      if (val === "yes") {
+        section.classList.remove("hidden");
+      } else {
+        section.classList.add("hidden");
+      }
+    }
+
+    function closeCustomModal() {
+      document.getElementById("custom-modal").classList.add("hidden");
+    }
+
+    function updateModalOccasion() {
+      const oc = document.getElementById("m-occasion").value;
+      const g = document.getElementById("m-greeting");
+      if (oc === 'opening') g.value = "鴻圖大展";
+      else if (oc === 'housewarming') g.value = "喬遷之喜";
+      else if (oc === 'wedding') g.value = "百年好合";
+      else if (oc === 'condolence') g.value = "哲人其萎";
+    }
+
+    function confirmAndSendLine() {
+      if (!activeProduct) return;
+      
+      let stems = document.getElementById("m-stems").value;
+      if (stems === "custom") {
+        stems = document.getElementById("m-stems-custom").value.trim() || "自定義株數";
+      }
+
+      let color = document.getElementById("m-color").value;
+      if (color === "custom") {
+        color = document.getElementById("m-color-custom").value.trim() || "自定義花色";
+      }
+
+      const squeezeStyle = document.getElementById("m-squeeze-style").value;
+      const pot = document.getElementById("m-pot").value;
+      const needCard = document.getElementById("m-need-card").value === "yes";
+      const greeting = document.getElementById("m-greeting")?.value || "";
+      const recipient = document.getElementById("m-recipient")?.value || "";
+      const sender = document.getElementById("m-sender")?.value || "";
+      const customInput = document.getElementById("m-custom-input").value;
+      const note = document.getElementById("m-note").value;
+
+      const msg = [
+        `🌿【森葉花坊 詢價與客製細節】🌿`,
+        `・商品：${activeProduct.name}`,
+        `・花株數量：${stems}`,
+        `・花色：${color}`,
+        `・擠花風格：${squeezeStyle}`,
+        `・盆器：${pot}`,
+        needCard ? `・祝賀卡：上款[${recipient}] 賀詞[${greeting}] 下款[${sender}]` : `・祝賀卡：不需要賀卡`,
+        customInput ? `・自訂需求：${customInput}` : "",
+        note ? `・備註：${note}` : "",
+        `💬 請問這款價格與運費如何計算？謝謝！`
+      ].filter(Boolean).join("\n");
+
+      copyText(msg, "已複製詢價明細，即將前往 LINE！");
+      setTimeout(() => {
+        window.open("https://lin.ee/RmI40FH", "_blank");
+      }, 800);
+      closeCustomModal();
+    }
+
+    function copyText(text, successMsg) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => showToast(successMsg)).catch(() => fallbackCopy(text, successMsg));
+      } else {
+        fallbackCopy(text, successMsg);
+      }
+    }
+
+    function fallbackCopy(text, successMsg) {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast(successMsg);
+      } catch (err) {
+        showToast("複製失敗，請手動複製");
+      }
+      document.body.removeChild(textarea);
+    }
+
+    function showToast(msg) {
+      const container = document.getElementById("toast-container");
+      if (!container) return;
+      const toast = document.createElement("div");
+      toast.className = "bg-stone-900 text-white px-4 py-2.5 rounded-xl shadow-lg text-xs animate-fade-in pointer-events-auto";
+      toast.textContent = msg;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      html.classList.toggle("dark");
+      const isDark = html.classList.contains("dark");
+      document.getElementById("theme-icon").className = isDark ? "fa-solid fa-sun text-sm" : "fa-solid fa-moon text-sm";
+    }
+
+    function navigateToSection(id) {
+      if (document.getElementById("storefront-view").classList.contains("hidden")) {
+        switchMainView("storefront");
+      }
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+
+    function switchMainView(view) {
+      const storeView = document.getElementById("storefront-view");
+      const adminView = document.getElementById("admin-view");
+      if (view === 'admin') {
+        if (!isAdmin) {
+          document.getElementById("login-modal").classList.remove("hidden");
+          return;
+        }
+        storeView.classList.add("hidden");
+        adminView.classList.remove("hidden");
+        document.getElementById("owner-admin-bar").classList.remove("hidden");
+      } else {
+        storeView.classList.remove("hidden");
+        adminView.classList.add("hidden");
+        if (isAdmin) {
+          document.getElementById("owner-admin-bar").classList.remove("hidden");
+        } else {
+          document.getElementById("owner-admin-bar").classList.add("hidden");
+        }
+        renderProducts();
+      }
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const u = document.getElementById("l-user").value;
+      const p = document.getElementById("l-pass").value;
+      if ((u === 'senyeh' || u === 'admin') && p === '8712822') {
+        isAdmin = true;
+        sessionStorage.setItem("senyeh_admin", "true");
+        document.getElementById("login-modal").classList.add("hidden");
+        showToast("店主登入成功");
+        switchMainView('admin');
+      } else {
+        showToast("帳號或密碼錯誤");
+      }
+    }
+
+    function handleAdminLogout() {
+      isAdmin = false;
+      sessionStorage.removeItem("senyeh_admin");
+      document.getElementById("owner-admin-bar").classList.add("hidden");
+      switchMainView('storefront');
+      showToast("已登出後台");
+    }
+
+    function closeLoginModal() {
+      document.getElementById("login-modal").classList.add("hidden");
+    }
+
+    function handleSecretClick() {
+      document.getElementById("login-modal").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
